@@ -30,7 +30,6 @@ contract Splitwise {
         if (debts[debtor][creditor] == 0) numCreditors[debtor]++; // new debt
         debts[debtor][creditor] += amount;
         totalOwed[debtor] += int32(amount);
-        totalOwed[creditor] -= int32(amount);
     }
 
     function _decreaseDebt(
@@ -39,6 +38,7 @@ contract Splitwise {
         uint32 amount
     ) internal {
         debts[debtor][creditor] -= amount;
+        totalOwed[creditor] -= int32(amount);
         if (debts[debtor][creditor] == 0) numCreditors[debtor]--; // resolved debt
     }
 
@@ -79,11 +79,9 @@ contract Splitwise {
         address[] calldata path
     ) public {
         address debtor = msg.sender;
-        require(
-            debtor != creditor,
-            "Debtor cannot be the same as creditor!"
-        );
+        require(debtor != creditor, "Debtor cannot be the same as creditor!");
         require(creditor != address(0), "Creditor cannot be empty!");
+        require(amount > 0, "IOU amount should be positive!");
         _addDebt(debtor, creditor, amount);
 
         _addUser(debtor);

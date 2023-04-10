@@ -152,7 +152,7 @@ async function getLastActive(user) {
 // The person you owe money is passed as 'creditor'
 // The amount you owe them is passed as 'amount'
 async function add_IOU(creditor, amount) {
-  var path = await doBFS(creditor, contractAddress, getNeighbors);
+  var path = await doBFS(creditor, defaultAccount, getNeighbors);
   await BlockchainSplitwise.connect(provider.getSigner(defaultAccount)).add_IOU(creditor, amount, path);
   // if (path != null) await BlockchainSplitwise.connect(provider.getSigner(defaultAccount)).resolveCycle(path, min_amount);
 }
